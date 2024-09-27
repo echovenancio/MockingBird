@@ -13,6 +13,7 @@ RUN /opt/venv/bin/pip install django
 
 ENV PATH="/opt/venv/bin:$PATH"
 
+COPY ./package.json .
 RUN npm install
 
 RUN wget https://github.com/mailhog/MailHog/releases/download/v1.0.1/MailHog_linux_amd64 -P /usr/bin
