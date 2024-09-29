@@ -5,4 +5,5 @@ app_name = 'app'
 
 urlpatterns = [
     path('', views.index, name="index"),
+    path('health-check', views.health_check),
 ]
