@@ -6,11 +6,8 @@ RUN apk add --no-cache git python3 py3-pip python3-dev build-base libffi-dev tzd
 
 COPY ./requirements.txt .
 RUN python3 -m venv /opt/venv
-
 RUN /opt/venv/bin/pip install --upgrade pip
-
-RUN /opt/venv/bin/pip install django
-
+RUN /opt/venv/bin/pip install -r requirements.txt
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY ./package.json .
