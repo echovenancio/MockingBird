@@ -1,14 +1,14 @@
 FROM alpine:3.20.3
 
-WORKDIR /workspace
-
 RUN apk add --no-cache git python3 py3-pip python3-dev build-base libffi-dev tzdata nodejs npm
 
+WORKDIR /workspace
+
 COPY ./requirements.txt .
-RUN python3 -m venv /opt/venv
-RUN /opt/venv/bin/pip install --upgrade pip
-RUN /opt/venv/bin/pip install -r requirements.txt
-ENV PATH="/opt/venv/bin:$PATH"
+RUN python3 -m venv /usr/opt/venv
+RUN /usr/opt/venv/bin/pip install --upgrade pip
+RUN /usr/opt/venv/bin/pip install -r requirements.txt
+ENV PATH="/usr/opt/venv/bin:$PATH"
 
 COPY ./package.json .
 RUN npm install

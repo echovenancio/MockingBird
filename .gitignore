@@ -2,4 +2,5 @@ db.sqlite3
 .env
 **/__pycache__/
 node_modules
-static/dist/
+static/dist/*
+.ruff_cache
