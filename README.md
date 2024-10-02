@@ -41,3 +41,35 @@ detectou uma imagem dando a opção de reabir o projeto dentro do container.
 Caso a notificação não apareça, você vai clicar em um simbolo de duas setas apontando em
 direções opostas no canto inferior esquerdo do editor. Ao clicar no simbolo irá aparecer um menu
 popup e você deve clicar na opção "Reabrir no container".
+
+## Desenvolvendo
+
+Antés de implementar uma feature crie um novo braço apartir do braço 'dev'. Ex:
+```bash
+git switch dev
+git pull origin dev
+git switch -c nome-feature
+# Desenvolvimento da feature ...
+git push origin nome-feature
+```
+
+Na interface do github você vai criar um pull request para dar um merge de 'nome-feature' para
+o braço 'dev'.
+
+## Makefile
+
+make é uma ferramenta onde você define alguns comandos em um arquivo 'Makefile' que realizam uma
+série de construir o seu projeto entre outras coisas.
+
+No 'Makefile' do projeto existem algumas definições, sendo elas:
+- run -> Cria um servido e roda o tailwind para construir o arquivo de estilo.
+- check -> Realiza checks.
+- test -> Executa testes.
+- format -> Formata os arquivos no projeto com 'ruff'.
+- fix -> Aplica sugestões do 'ruff check'.
+- normalize -> Executa 'format' e 'fix'. Obs: Rode esse comando toda vez que for fazer um commit.
+
+Exemplo de uso do 'make':
+```
+make run
+```
