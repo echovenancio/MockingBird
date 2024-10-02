@@ -2,7 +2,16 @@
 
 ## Docker
 
-Caso esteja utilizando o windows você tem a opção de utlizar Hyper-V ou WSL 2 como backend.
+Caso esteja utilizando o windows você tem a opção de utlizar Hyper-V ou WSL 2 como backend, escolha um dos dois e instale.
+__Obs: Recomendo utilizar o wsl__. 
+
+### WSL 2
+
+Para [habilitar o wsl 2](https://learn.microsoft.com/en-us/windows/wsl/install)
+você vai precisar rodar o seguinte comando em um console powershell como administrador:
+```bash
+wsl --install
+```
 
 ### Hyper-V
 
@@ -26,7 +35,7 @@ wsl --install
 
 Após habilitar qualquer uma das features você deve reiniciar o computador.
 
-Agora você pode seguir os passos da [instalação interativa](https://docs.docker.com/desktop/install/windows-install/#install-interactively).
+Agora você pode seguir os passos da [instalação interativa](https://docs.docker.com/desktop/install/windows-install/#install-interactively) do docker.
 
 ## DevContainers
 
