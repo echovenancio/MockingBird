@@ -27,7 +27,7 @@ Você tambem consegue habilitar essa feature através do [painel de controle](ht
 
 Após habilitar qualquer uma das features você deve reiniciar o computador.
 
-Agora você pode seguir os passos da [instalação interativa](https://docs.docker.com/desktop/install/windows-install/#install-interactively).
+Agora você pode seguir os passos da [instalação interativa](https://docs.docker.com/desktop/install/windows-install/#install-interactively) do docker.
 
 ## DevContainers
 
