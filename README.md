@@ -7,11 +7,11 @@ Existem duas opçoes de configurar o ambiente de desenvolvimento:
 ## Sem docker
 
 Você vai precisar instalar manualmente:
--  [Python ~3.12]()
--  [Node/npm ~20-22]()
+-  [Python ~3.12](https://www.python.org/downloads/)
+-  [Node/npm ~20-22](https://nodejs.org/pt)
 
 Opcional: 
--  [Mailhog]()
+-  [Mailhog](https://github.com/mailhog/MailHog)
 -  Make
 
 ### Setup
