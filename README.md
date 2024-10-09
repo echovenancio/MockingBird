@@ -22,6 +22,7 @@ Com o ambiente virtual ativo você vai instalar as dependências do python com:
 ```bash
 pip install -r requirements.txt
 ```
+Após a instalação você deve entrar novamente no ambiente virtual.
 
 Após você tiver instalado o node você vai baixar as dependências do tailwindcss com:
 ```bash
