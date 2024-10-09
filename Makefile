@@ -6,20 +6,20 @@ run:
 
 check:
 	@echo "Realizando checagem..."
-	@python manage.py check ; \
-	@ruff check . ; \
-	@ruff format --check
+	python manage.py check ; \
+	ruff check . ; \
+	ruff format --check
 
 test:
 	@echo "Executando testes..."
-	@python manage.py test
+	python manage.py test
 
 normalize: format fix
 
 format:
 	@echo "Formatando projeto..."
-	@ruff format
+	ruff format
 
 fix:
 	@echo "Arrumando erros indicandos pelo ruff..."
-	@ruff check --fix
+	ruff check --fix

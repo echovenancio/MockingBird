@@ -1,6 +1,44 @@
 # Setup do ambiente de desenvolvimento
 
-## Docker
+Existem duas opçoes de configurar o ambiente de desenvolvimento:
+-  [Sem docker](#sem-docker).
+-  [Com docker](#com-docker). 
+
+## Sem docker
+
+Você vai precisar instalar manualmente:
+-  [Python ~3.12](https://www.python.org/downloads/)
+-  [Node/npm ~20-22](https://nodejs.org/pt)
+
+Opcional: 
+-  [Mailhog](https://github.com/mailhog/MailHog)
+-  Make
+
+### Setup
+Você vai criar um ambiente virtual de nome 'venv3', ex: 'python -m venv venv3'. Caso crie o ambiente virtual com outro nome
+não esqueça da adicionar o nome dele no .gitignore, para que o git ignore o diretório.
+
+Com o ambiente virtual ativo você vai instalar as dependências do python com: 
+```bash
+pip install -r requirements.txt
+```
+Após a instalação você deve entrar novamente no ambiente virtual.
+
+Após você tiver instalado o node você vai baixar as dependências do tailwindcss com:
+```bash
+node install
+```
+
+Caso você não tenha instalado o make você precisará executar
+manualmente alguns comandos relacionados ao projeto.
+Os mais importantes são `npm run watch`, que escuta por
+mudanças nos arquivos que contem classes tailwind e constroi
+o arquivo de estilo. O `ruff check --fix` procura por erros
+simples e arruma eles, já o `ruff format` formata os arquivos.
+Os demais comandos são os padrões referentes ao django.
+
+
+## Com Docker
 
 Caso esteja utilizando o windows você tem a opção de utlizar Hyper-V ou WSL 2 como backend, escolha um dos dois e instale.
 __Obs: Recomendo utilizar o wsl__. 
