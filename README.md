@@ -1,8 +1,8 @@
 # Setup do ambiente de desenvolvimento
 
 Existem duas opçoes de configurar o ambiente de desenvolvimento:
--  Sem docker.
--  Com docker. 
+-  [Sem docker](#sem-docker).
+-  [Com docker](#com-docker). 
 
 ## Sem docker
 

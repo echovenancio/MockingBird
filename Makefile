@@ -7,8 +7,8 @@ run:
 check:
 	@echo "Realizando checagem..."
 	@python manage.py check ; \
-	@ruff check . ; \
-	@ruff format --check
+	ruff check . ; \
+	ruff format --check
 
 test:
 	@echo "Executando testes..."
