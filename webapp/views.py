@@ -1,8 +1,14 @@
 from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.core.validators import validate_email
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login as dlogin
 from django.core.mail import send_mail
 from . import forms
 from . import models
-
+from .decorators import login_verified
 
 # Create your views here.
 def index(request):
@@ -30,42 +36,79 @@ def signup_page(request):
                     "mockingbird@email.com",
                     [email],
                 )
-                request.session["user_id"] = user.id
+                dlogin(request, user)
             return redirect("app:signup-confirmation")
     return render(request, "webapp/signup.html", {"form": form})
 
-
+@login_required
 def signup_confirmation(request):
     if request.method == "POST":
-        user_id = request.session["user_id"]
+        user = request.user
+        if user.is_verified:
+            return redirect("app:dashboard")
         pin = request.POST.get("pin", "")
-        if user_id is not None and pin != "":
-            print("ta massa")
-            user = models.User.objects.get(pk=request.session["user_id"])
-            print(user.email)
-            print(pin)
-            try:
-                ticket = models.VerificationTicket.objects.get(user=user)
-                if str(ticket.pin) == str(pin):
-                    print("aqui")
-                    user.is_verified = True
-                    user.save()
-                return HttpResponse("Registrado")
-            except models.VerificationTicket.DoesNotExist:
-                return HttpResponse("ué")
+        try:
+            ticket = models.VerificationTicket.objects.get(user=user)
+            if str(ticket.pin) == str(pin):
+                user.is_verified = True
+                user.save()
+                ticket.delete()
+                return redirect("app:dashboard")
+            else:
+                return render(request, "webapp/confirmation.html", {"pin": pin, "error": "pin incorreto."})
+            return HttpResponse("Registrado")
+        except models.VerificationTicket.DoesNotExist:
+            return HttpResponse("ué")
     return render(request, "webapp/confirmation.html", {})
 
 def login(request):
     form = forms.LoginForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
-            username = form.cleaned_data["email"]
+            username = form.cleaned_data["username"]
             password = form.cleaned_data["password"]
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
-                if not user.is_verified:
-                    redirect("app:signup-confirmation")
-                else:
-                    request.session["user_id"] = user.id
-                    return HttpResponse("logado")
+                dlogin(request, user)
+                return redirect("app:dashboard")
     return render(request, "webapp/login.html", {"form": form})
+
+def password_recovery(request):
+    if request.POST:
+        email = request.POST.get("email", "")
+        try:
+            validate_email(email)
+            user = models.User.objects.get(email=email)
+            ticket = models.PasswordRecoveryTicket(user=user)
+            url = f"0.0.0.0:8000{reverse('app:password-recovery-confirmation', args=(ticket.token,))}"
+            ticket.save()
+            send_mail(
+                "Recuperação de senha",
+                f"url de recuperação de senha: {url}",
+                "mockingbird@email.com",
+                [email],
+            )
+        except ValidationError:
+            return render(request, "webapp/accounts/password_recovery.html", {"email": email, "error": "email inválido."})
+        except models.User.DoesNotExist:
+            pass
+        return render(request, "webapp/accounts/password_recovery_done.html", {})
+    return render(request, "webapp/accounts/password_recovery.html", {})
+
+def password_recovery_confirmation(request, token):
+    form = forms.NewPasswordForm(request.POST or None)
+    ticket = get_object_or_404(models.PasswordRecoveryTicket, token=token)
+    if request.POST:
+        if form.is_valid():
+            ticket = models.PasswordRecoveryTicket.objects.get(token=token)
+            user = ticket.user 
+            user.set_password(form.cleaned_data['new_password'])
+            user.save()
+            ticket.delete()
+            messages.success(request, "Senha atualizada!")
+            return redirect("app:login")
+    return render(request, "webapp/accounts/password_recovery_confirm.html", {"form": form, "token": token})
+
+@login_verified
+def dashboard(request):
+    return(HttpResponse("boa"))
