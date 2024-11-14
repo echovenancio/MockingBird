@@ -1,4 +1,6 @@
 from django.urls import path, include
+from django.conf.urls.static import static
+from django.conf import settings
 from . import views
 from django.contrib.auth.views import (
     LogoutView, 
@@ -20,4 +22,4 @@ urlpatterns = [
     path("accounts/password-recovery/cofirm/<uuid:token>", views.password_recovery_confirmation, name="password-recovery-confirmation"),
     path("health-check/", views.health_check),
     path("test-code/", views.run_code),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,3 +19,5 @@ tonic = "0.12.3"
 
 [build-dependencies]
 tonic-build = "0.12.3"
+
+cargo-features = ["edition2021"]

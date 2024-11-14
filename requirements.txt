@@ -1,3 +1,5 @@
 tzdata
 django
 ruff
+Pillow
+grpcio

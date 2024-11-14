@@ -17,22 +17,37 @@ class PasswordRecoveryTicket(models.Model):
 class Course(models.Model):
     name = models.CharField(max_length=255)
 
+class UserCourse(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)
+
 class Module(models.Model):
     name = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     module_template = models.CharField(max_length=255)
 
+class UserModule(models.Model):
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)
+
 class Challenge(models.Model):
     name = models.CharField(max_length=255)
-    module = models.ForeignKey(Module, on_delte=models.CASCADE)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
     code_prelude = models.TextField()
     test_path = models.CharField(max_length=255)
+
+class UserChallenge(models.Model):
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)
 
 class Board(models.Model):
     name = models.CharField(max_length=255)
 
 class Post(models.Model):
-    board = models.ForeignKey(Board, on_delte=models.CASCADE)
+    board = models.ForeignKey(Board, on_delete=models.CASCADE)
     original_poster = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
     likes = models.IntegerField()
     comment = models.ForeignKey('self', on_delete=models.DO_NOTHING, null=True)
@@ -41,8 +56,11 @@ class Post(models.Model):
 
 class Badge(models.Model):
     name = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     icon = models.FileField(upload_to="badges/")
+
+class UserBadge(models.Model):
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Event(models.Model):
     EPIC = "ep"
@@ -57,3 +75,7 @@ class Event(models.Model):
     difficulty = models.CharField(max_length=2, choices=DIFFICULTY_CHOICES, default=COMMON)
     icon = models.FileField(upload_to="events/")
 
+class UserEvent(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)

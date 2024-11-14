@@ -1,0 +1,6 @@
+FROM alpine:3.14
+RUN apk add curl protoc protobuf-dev lua5.4 rust cargo
+WORKDIR sandbox
+COPY . ./
+RUN rustup default nightly && rustup update
+RUN cargo build --bin sandbox-server
