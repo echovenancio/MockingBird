@@ -19,4 +19,5 @@ urlpatterns = [
     path("accounts/password-recovery", views.password_recovery, name="password-recovery"),
     path("accounts/password-recovery/cofirm/<uuid:token>", views.password_recovery_confirmation, name="password-recovery-confirmation"),
     path("health-check/", views.health_check),
+    path("test-code/", views.run_code),
 ]

@@ -56,7 +56,6 @@ def signup_confirmation(request):
                 return redirect("app:dashboard")
             else:
                 return render(request, "webapp/confirmation.html", {"pin": pin, "error": "pin incorreto."})
-            return HttpResponse("Registrado")
         except models.VerificationTicket.DoesNotExist:
             return HttpResponse("ué")
     return render(request, "webapp/confirmation.html", {})
@@ -112,3 +111,31 @@ def password_recovery_confirmation(request, token):
 @login_verified
 def dashboard(request):
     return(HttpResponse("boa"))
+
+def run_code(request):
+    import subprocess
+    import shlex
+    if request.POST:
+        code = shlex.quote(request.POST.get("code", ""))
+        commands = f"/usr/bin/lua5.3 -e {code} tests/test_add.lua"
+        print(commands)
+        proc = subprocess.Popen(
+            ["podman", "run", "--net=none", "--security-opt=no-new-privileges", "--name", "sandbox", "--rm", "mockingbird-sandbox", "sh", "-c", commands],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        stdout, stderr = proc.communicate(commands)
+        print(stdout)
+        print(stderr)
+        proc.terminate()
+        proc.wait()
+        proc.poll()
+        retcode = proc.returncode
+        print(retcode)
+        if retcode:
+            return HttpResponse(stderr)
+        return HttpResponse(stdout)
+    else:
+        return render(request, "webapp/test_code.html")

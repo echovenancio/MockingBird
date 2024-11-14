@@ -1,0 +1,16 @@
+syntax = "proto3";
+package sandbox;
+
+service CodeRunner {
+    rpc RunUserSolution(SolutionRequest) returns (SolutionReply);
+}
+
+message SolutionRequest {
+    string testPath = 1;
+    string solution = 2;
+}
+
+message SolutionReply {
+    int32 code = 1;
+    string result = 2;
+}
