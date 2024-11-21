@@ -42,6 +42,7 @@ class UserChallenge(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)
+    solution = models.TextField()
 
 class Board(models.Model):
     name = models.CharField(max_length=255)

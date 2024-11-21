@@ -1,0 +1,14 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}Board{% endblock %}
+
+{% block content %}
+    <p>Cursando</p>
+    {% for post in posts %}
+        <div>
+            {{}} 
+        </div>
+    {% empty %}
+        Nenhum post no board  
+    {% endif %}
+{% endblock %}

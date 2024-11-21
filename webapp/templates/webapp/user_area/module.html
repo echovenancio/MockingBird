@@ -1,0 +1,15 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}{{module.name}}{% endblock %}
+
+{% block content %}
+    <div id="render"></div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    {{markdown|json_script:"markdown-data"}}
+    <script defer id="markdown-data"></script>
+    <script defer >
+        const content = JSON.parse(document.getElementById("markdown-data").textContent);
+        document.getElementById('render').innerHTML = marked.parse(content.inner)
+    </script>
+    <a href=""></a>
+{% endblock %}

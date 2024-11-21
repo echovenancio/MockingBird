@@ -1,0 +1,28 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+    <h1>{{course.name}}</h1>
+    {% if not enrolled %}
+        <form method="post" action="{% url 'app:register-to-course' course.id %}">
+            {% csrf_token %}
+            <input type="submit" value="Registrar-se no curso">
+        </form>
+    {% endif %}
+    <div class="flex flex-col gap-2">
+        {% for modulo in modules %}
+            {% if enrolled %}
+                <a href="{% url 'app:module' course.id modulo.id %}">
+                    {{modulo.name}} 
+                </a>
+            {% else %}
+                <a class="cursor-not-allowed" disabled>
+                    {{modulo.name}}
+                </a>
+            {% endif %}
+        {% empty %}
+            <p>Nenhum modulo disponível.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

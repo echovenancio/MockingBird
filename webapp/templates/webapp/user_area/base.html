@@ -12,21 +12,21 @@
     <body class="font-mono dark:bg-stone-950 dark:text-white h-screen flex flex-col gap-2 px-4">
         <header class="pt-4">
             <div class="container mx-auto flex flex-row justify-between items-center">
-                <h2 class="text-4xl"><a href="/">λ</a></h2>
+                <h2 class="text-4xl"><a href="{% url 'app:dashboard' %}">λ</a></h2>
                 <nav>
                     <ul class="flex flex-row justify-evenly gap-6">
                         <li class="border-2 border-black dark:border-white px-4 py-1 hover:cursor-pointer hover:bg-stone-950 hover:text-stone-950 hover:dark:bg-white hover:dark:text-stone-950 uppercase">
-                            <a href="">
+                            <a href="{% url 'app:cursos' %}">
                                 Cursos
                             </a>
                         </li>
                         <li class="border-2 border-black dark:border-white px-4 py-1 hover:cursor-pointer hover:bg-stone-950 hover:text-stone-950 hover:dark:bg-white hover:dark:text-stone-950 uppercase">
-                            <a href="">
+                            <a href="{% url 'app:eventos' %}">
                                 Eventos
                             </a>
                         </li>
                         <li class="border-2 border-black dark:border-white px-4 py-1 hover:cursor-pointer hover:bg-stone-950 hover:text-stone-950 hover:dark:bg-white hover:dark:text-stone-950 uppercase">
-                            <a href="">
+                            <a href="{% url 'app:forum' %}">
                                 Forum
                             </a>
                         </li>
@@ -34,7 +34,7 @@
                 </nav>
             </div>
         </header>
-        <main class="container mx-auto flex-grow">
+        <main class="container mx-auto flex-grow" id="content">
             {% block content %}
             {% endblock %}
         </main>
