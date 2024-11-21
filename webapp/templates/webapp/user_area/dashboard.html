@@ -1,0 +1,14 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <p>Cursando</p>
+    {% for curso in cursos %}
+        <div>
+            {{curso.name}} 
+        </div>
+    {% empty %}
+        Você não está cursando algum curso.
+    {% endif %}
+{% endblock %}

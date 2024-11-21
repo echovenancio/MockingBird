@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login as dlogin
 from django.core.mail import send_mail
+from webapp.utils import run_user_code
 from . import forms
 from . import models
 from .decorators import login_verified
@@ -113,29 +114,9 @@ def dashboard(request):
     return(HttpResponse("boa"))
 
 def run_code(request):
-    import subprocess
-    import shlex
     if request.POST:
-        code = shlex.quote(request.POST.get("code", ""))
-        commands = f"/usr/bin/lua5.3 -e {code} tests/test_add.lua"
-        print(commands)
-        proc = subprocess.Popen(
-            ["podman", "run", "--net=none", "--security-opt=no-new-privileges", "--name", "sandbox", "--rm", "mockingbird-sandbox", "sh", "-c", commands],
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        stdout, stderr = proc.communicate(commands)
-        print(stdout)
-        print(stderr)
-        proc.terminate()
-        proc.wait()
-        proc.poll()
-        retcode = proc.returncode
-        print(retcode)
-        if retcode:
-            return HttpResponse(stderr)
-        return HttpResponse(stdout)
+        response = run_user_code("tests/test_add.lua", request.POST.get("code", "")) 
+        print(response)
+        return HttpResponse(response)
     else:
         return render(request, "webapp/test_code.html")

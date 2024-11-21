@@ -1,6 +1,11 @@
-FROM alpine:3.14
-RUN apk add curl protoc protobuf-dev lua5.4 rust cargo
+FROM debian:latest
+RUN apt update
+RUN apt install libc6 curl gcc grpc-proto protobuf-compiler lua5.4 pkg-config -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV export PATH="$PATH:$HOME/.cargo/bin"
+RUN echo $PATH
+RUN . "$HOME/.cargo/env"
+RUN ls $HOME/.cargo/bin
 WORKDIR sandbox
 COPY . ./
-RUN rustup default nightly && rustup update
-RUN cargo build --bin sandbox-server
+RUN $HOME/.cargo/bin/cargo run --bin sandbox-server
