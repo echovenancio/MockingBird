@@ -1,3 +1,4 @@
+from django.contrib.auth.forms import ValidationError
 from django.shortcuts import render, HttpResponse, redirect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -11,9 +12,18 @@ from . import forms
 from . import models
 from .decorators import login_verified
 
+
 # Create your views here.
 def index(request):
     return render(request, "webapp/index.html", {})
+
+
+def about(request):
+    return render(request, "webapp/about.html", {})
+
+
+def contact(request):
+    return render(request, "webapp/contact.html", {})
 
 
 def health_check(request):
@@ -22,6 +32,7 @@ def health_check(request):
 
 def signup_page(request):
     import secrets
+
     form = forms.RegistrationForm(request.POST)
     if request.method == "POST":
         if form.is_valid():
@@ -41,6 +52,7 @@ def signup_page(request):
             return redirect("app:signup-confirmation")
     return render(request, "webapp/accounts/signup.html", {"form": form})
 
+
 @login_required
 def signup_confirmation(request):
     if request.method == "POST":
@@ -56,10 +68,15 @@ def signup_confirmation(request):
                 ticket.delete()
                 return redirect("app:dashboard")
             else:
-                return render(request, "webapp/accounts/confirmation.html", {"pin": pin, "error": "pin incorreto."})
+                return render(
+                    request,
+                    "webapp/accounts/confirmation.html",
+                    {"pin": pin, "error": "pin incorreto."},
+                )
         except models.VerificationTicket.DoesNotExist:
             return HttpResponse("ué")
     return render(request, "webapp/accounts/confirmation.html", {})
+
 
 def login(request):
     form = forms.LoginForm(request.POST)
@@ -72,6 +89,7 @@ def login(request):
                 dlogin(request, user)
                 return redirect("app:dashboard")
     return render(request, "webapp/accounts/login.html", {"form": form})
+
 
 def password_recovery(request):
     if request.POST:
@@ -89,11 +107,16 @@ def password_recovery(request):
                 [email],
             )
         except ValidationError:
-            return render(request, "webapp/accounts/password_recovery.html", {"email": email, "error": "email inválido."})
-        except models.User.DoesNotExist:
+            return render(
+                request,
+                "webapp/accounts/password_recovery.html",
+                {"email": email, "error": "email inválido."},
+            )
+        except models.User.DoesNotExists:
             pass
         return render(request, "webapp/accounts/password_recovery_done.html", {})
     return render(request, "webapp/accounts/password_recovery.html", {})
+
 
 def password_recovery_confirmation(request, token):
     form = forms.NewPasswordForm(request.POST or None)
@@ -101,13 +124,18 @@ def password_recovery_confirmation(request, token):
     if request.POST:
         if form.is_valid():
             ticket = models.PasswordRecoveryTicket.objects.get(token=token)
-            user = ticket.user 
-            user.set_password(form.cleaned_data['new_password'])
+            user = ticket.user
+            user.set_password(form.cleaned_data["new_password"])
             user.save()
             ticket.delete()
             messages.success(request, "Senha atualizada!")
             return redirect("app:login")
-    return render(request, "webapp/accounts/password_recovery_confirm.html", {"form": form, "token": token})
+    return render(
+        request,
+        "webapp/accounts/password_recovery_confirm.html",
+        {"form": form, "token": token},
+    )
+
 
 @login_verified
 def dashboard(request):
@@ -115,20 +143,42 @@ def dashboard(request):
     user_courses = user.usercourse_set.all()
     return render(request, "webapp/user_area/dashboard.html", {"cursos": user_courses})
 
+
 @login_verified
 def cursos(request):
     cursos = models.Course.objects.all()
     return render(request, "webapp/user_area/cursos.html", {"cursos": cursos})
+
 
 @login_verified
 def forum(request):
     boards = models.Board.objects.all()
     return render(request, "webapp/user_area/forum.html", {"boards": boards})
 
+
+@login_verified
+def board(request, board_id):
+    board = get_object_or_404(models.Board, pk=board_id)
+    posts = models.Board.post_set.filter(comment=None)
+    return render(
+        request, "webapp/user_area/board.html", {"board": board, "posts": posts}
+    )
+
+
+@login_verified
+def poast(request, board_id, post_id):
+    post = get_object_or_404(models.Post, pk=post_id)
+    comments = post.comment_set.all()
+    return render(
+        request, "webapp/user_area/post.html", {"post": post, "comments": comments}
+    )
+
+
 @login_verified
 def eventos(request):
     eventos = models.Event.objects.all()
     return render(request, "webapp/user_area/eventos.html", {"eventos": eventos})
+
 
 @login_verified
 def curso(request, id):
@@ -138,39 +188,100 @@ def curso(request, id):
         modules = None
         if course.usercourse_set.filter(user=request.user).exists():
             is_enrolled = True
-            modules = [x.module for x in models.UserModule.objects.filter(user=request.user, module__course=course)]
+            modules = [
+                x.module
+                for x in models.UserModule.objects.filter(
+                    user=request.user, module__course=course
+                )
+            ]
         else:
             modules = models.Module.objects.filter(course=course)
         return render(
-            request, "webapp/user_area/curso.html", 
-            {"course": course, "modules": modules, "enrolled": is_enrolled})
+            request,
+            "webapp/user_area/curso.html",
+            {"course": course, "modules": modules, "enrolled": is_enrolled},
+        )
     except models.Course.DoesNotExist:
         return redirect("app:cursos")
+
 
 @login_verified
 def module(request, curso_id, module_id):
     try:
         from pathlib import Path
-        user_module = models.UserModule.objects.get(user=request.user, module__id=module_id)
+
+        user_module = models.UserModule.objects.get(
+            user=request.user, module__id=module_id
+        )
         file_path = Path(user_module.module.module_template)
         markdown = file_path.read_text()
-        return render(request, "webapp/user_area/module.html", {"module": user_module, "markdown": {"inner": markdown}})
+        return render(
+            request,
+            "webapp/user_area/module.html",
+            {"module": user_module, "markdown": {"inner": markdown}},
+        )
     except models.UserModule.DoesNotExist:
         return redirect("app:curso", curso_id)
 
+
 @login_verified
-def challenge(request, curso_id, modulo_id):
-    user = request.user
-    module_challenge = None
-    user_challenge = None
+def get_challenge(request, curso_id, modulo_id):
+    challenge = None
     try:
-        module_challenge = models.Challenge.get(module=models.Module.get(pk=modulo_id))
-        user_challenge = models.UserChallenge.get(challenge=module_challenge, user=user)
+        challenge = models.Challenge.get(module=models.Module.get(pk=modulo_id))
     except models.Challenge.DoesNotExist:
         return redirect("app:cursos")
-    except models.UserChallenge.DoesNotExist:
-        user_challenge = user.userchallenge_set.create(challenge=module_challenge)
+    return render(request, "webapp/user_area/challenge.html", {"challenge": challenge})
+
+
+@login_verified
+def finish_challenge(request, curso_id, modulo_id):
+    if request.POST:
+        user = request.user
+        challenge = None
+        code = request.POST.get("code", "")
+        try:
+            challenge = models.Challenge.get(module=models.Module.get(pk=modulo_id))
+        except models.Challenge.DoesNotExist:
+            return redirect("app:cursos")
+        result = run_user_code(challenge.test_path, code)
+        if result.code == 0:
+            user.userchallenge_set.create(
+                challenge=challenge, finished=True, solution=code
+            )
+            user.usermodel_set.get(
+                module=models.Module.get(pk=modulo_id)
+            ).finished = True
         user.save()
+        return redirect("app:modulos")
+
+
+@login_verified
+def get_event(request, event_id):
+    event = None
+    try:
+        event = models.Event.get(pk=event_id)
+    except models.Event.DoesNotExist:
+        return redirect("app:eventos")
+    return render(request, "webapp/user_area/event.html", {"event": event})
+
+
+@login_verified
+def finish_event(request, event_id):
+    if request.POST:
+        user = request.user
+        event = None
+        code = request.POST.get("code", "")
+        try:
+            event = models.Event.get(pk=event_id)
+        except models.Event.DoesNotExist:
+            return redirect("app:eventos")
+        result = run_user_code(event.challenge.test_path, code)
+        if result.code == 0:
+            user.userevent_set.create(event=event, finished=True, solution=code)
+        user.save()
+        return redirect("app:eventos")
+
 
 @login_verified
 def register_to_course(request, curso_id):
@@ -187,6 +298,7 @@ def register_to_course(request, curso_id):
         except models.Course.DoesNotExist:
             return redirect("app:cursos")
 
+
 @login_verified
 def start_module(request, curso_id, module_id):
     if request.POST:
@@ -199,6 +311,7 @@ def start_module(request, curso_id, module_id):
         except models.Course.DoesNotExist:
             return redirect("app:curso", curso_id)
 
+
 @login_verified
 def finish_module(request, curso_id, module_id):
     if request.POST:
@@ -209,7 +322,7 @@ def finish_module(request, curso_id, module_id):
             module.save()
             course = models.Course.get(pk=curso_id)
             user_modules = user.usermodule_set.filter(module__course=course)
-            user_modules_set = set([ x.module for x in user_modules])
+            user_modules_set = set([x.module for x in user_modules])
             course_modules = set(course.modules_set.all())
             if course_modules - user_modules_set == 0:
                 for m in user_modules:
@@ -221,9 +334,10 @@ def finish_module(request, curso_id, module_id):
         except models.UserModule.DoesNotExist:
             return redirect("app:curso", curso_id)
 
+
 def run_code(request):
     if request.POST:
-        response = run_user_code("tests/test_add.lua", request.POST.get("code", "")) 
+        response = run_user_code("tests/test_add.lua", request.POST.get("code", ""))
         print(response)
         return HttpResponse(response)
     else:

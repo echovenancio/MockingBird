@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from . import models
 
+
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -9,13 +10,19 @@ class RegistrationForm(UserCreationForm):
         model = models.User
         fields = ["username", "email", "password1", "password2"]
 
+
 class LoginForm(forms.Form):
     username = forms.CharField(label="Usuário", max_length=255)
     password = forms.CharField(label="Senha", max_length=32, widget=forms.PasswordInput)
 
+
 class NewPasswordForm(forms.Form):
-    new_password = forms.CharField(label="Nova senha", max_length=32, widget=forms.PasswordInput)
-    password_confirmation = forms.CharField(label="Confirmação nova senha", max_length=32, widget=forms.PasswordInput)
+    new_password = forms.CharField(
+        label="Nova senha", max_length=32, widget=forms.PasswordInput
+    )
+    password_confirmation = forms.CharField(
+        label="Confirmação nova senha", max_length=32, widget=forms.PasswordInput
+    )
 
     def clean(self):
         cleaned_data = super().clean()

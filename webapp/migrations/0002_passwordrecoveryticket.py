@@ -7,17 +7,27 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('webapp', '0001_initial'),
+        ("webapp", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PasswordRecoveryTicket',
+            name="PasswordRecoveryTicket",
             fields=[
-                ('token', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "token",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
