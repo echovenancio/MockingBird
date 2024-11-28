@@ -42,7 +42,7 @@ class UserModule(models.Model):
 class Challenge(models.Model):
     name = models.CharField(max_length=255)
     module = models.ForeignKey(Module, on_delete=models.CASCADE)
-    description = models.TextField()
+    description = models.TextField(default="")
     code_prelude = models.TextField()
     test_path = models.CharField(max_length=255)
 
@@ -51,7 +51,7 @@ class UserChallenge(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)
-    solution = models.TextField()
+    solution = models.TextField(default="")
 
 
 class Board(models.Model):
@@ -65,7 +65,7 @@ class Post(models.Model):
     comment = models.ForeignKey("self", on_delete=models.DO_NOTHING, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    text = models.TextField()
+    text = models.TextField(default="")
 
 
 class Badge(models.Model):
@@ -88,11 +88,11 @@ class Event(models.Model):
         max_length=2, choices=DIFFICULTY_CHOICES, default=COMMON
     )
     icon = models.FileField(upload_to="events/")
-    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
+    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE, null=True)
 
 
 class UserEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     finished = models.BooleanField(default=False)
-    solution = models.TextField()
+    solution = models.TextField(default="")
