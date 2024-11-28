@@ -7,6 +7,8 @@ app_name = "app"
 
 urlpatterns = [
     path("", views.index, name="index"),
+    path("about/", views.about, name="about"),
+    path("contact/", views.contact, name="contact"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("cursos", views.cursos, name="cursos"),
     path("curso/<int:id>", views.curso, name="curso"),
@@ -22,11 +24,6 @@ urlpatterns = [
         "start_module/<int:curso_id>/<int:module_id>",
         views.start_module,
         name="start-module",
-    ),
-    path(
-        "finish_module/<int:curso_id>/<int:module_id>",
-        views.finish_module,
-        name="finish-module",
     ),
     path("accounts/login/", views.login, name="login"),
     path("accounts/signup/", views.signup_page, name="signup"),
