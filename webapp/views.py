@@ -249,7 +249,7 @@ def finish_challenge(request, curso_id, modulo_id):
             user.userchallenge_set.create(
                 challenge=challenge, finished=True, solution=code
             )
-            user.usermodel_set.get(
+            user.usermodule_set.get(
                 module=models.Module.get(pk=modulo_id)
             ).finished = True
         user.save()
@@ -310,35 +310,3 @@ def start_module(request, curso_id, module_id):
             return redirect("app:module", module_id)
         except models.Course.DoesNotExist:
             return redirect("app:curso", curso_id)
-
-
-@login_verified
-def finish_module(request, curso_id, module_id):
-    if request.POST:
-        try:
-            user = request.user
-            module = user.usermodule_set.get(module__id=module_id)
-            module.finished = True
-            module.save()
-            course = models.Course.get(pk=curso_id)
-            user_modules = user.usermodule_set.filter(module__course=course)
-            user_modules_set = set([x.module for x in user_modules])
-            course_modules = set(course.modules_set.all())
-            if course_modules - user_modules_set == 0:
-                for m in user_modules:
-                    if not m.finished:
-                        return
-                user_course = user.usercourse_set.get(course__id=curso_id)
-                user_course.finished = True
-                return
-        except models.UserModule.DoesNotExist:
-            return redirect("app:curso", curso_id)
-
-
-def run_code(request):
-    if request.POST:
-        response = run_user_code("tests/test_add.lua", request.POST.get("code", ""))
-        print(response)
-        return HttpResponse(response)
-    else:
-        return render(request, "webapp/test_code.html")

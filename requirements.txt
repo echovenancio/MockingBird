@@ -3,3 +3,4 @@ django
 ruff
 Pillow
 grpcio
+grpcio-tools
