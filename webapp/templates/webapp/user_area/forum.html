@@ -1,0 +1,12 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}Forum{% endblock %}
+
+{% block content %}
+    <h1>Boards</h1>
+    {% for board in boards %}
+        <div>
+            {{board.name}} 
+        </div>
+    {% endfor %}
+{% endblock %}

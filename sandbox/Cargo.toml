@@ -1,0 +1,22 @@
+[package]
+name = "sandbox"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]] # Bin to run the HelloWorld gRPC server
+name = "sandbox-server"
+path = "src/server.rs"
+
+[[bin]] # Bin to run the HelloWorld gRPC client
+name = "sandbox-client"
+path = "src/client.rs"
+
+[dependencies]
+mlua = { version = "0.10.1", features = ["lua54"] }
+prost = "0.13.3"
+tokio = { version = "1.41.1", features = ["macros", "rt-multi-thread"] }
+tonic = "0.12.3"
+
+[build-dependencies]
+tonic-build = "0.12.3"
+

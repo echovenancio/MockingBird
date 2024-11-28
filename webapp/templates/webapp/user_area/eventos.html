@@ -1,0 +1,14 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}Eventos{% endblock %}
+
+{% block content %}
+    <h1>Eventos</h1>
+    {% for evento in eventos %}
+        <div>
+            {{evento.name}} 
+        </div>
+    {% empty %}
+        Nenhum evento ativo  
+    {% endfor %}
+{% endblock %}

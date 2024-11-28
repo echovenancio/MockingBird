@@ -1,0 +1,14 @@
+{% extends 'webapp/user_area/base.html' %}
+
+{% block title %}CUrsos{% endblock %}
+
+{% block content %}
+    <h1>Cursos disponiveis</h1>
+    <div class="flex flex-col gap-2">
+        {% for curso in cursos %}
+            <a href="{% url 'app:curso' curso.id %}">
+                {{curso.name}} 
+            </a>
+        {% endfor %}
+    </div>
+{% endblock %}

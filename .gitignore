@@ -5,3 +5,4 @@ node_modules
 static/dist/*
 .ruff_cache
 venv3
+**/target/
