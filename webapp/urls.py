@@ -41,5 +41,4 @@ urlpatterns = [
         name="password-recovery-confirmation",
     ),
     path("health-check/", views.health_check),
-    path("test-code/", views.run_code),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
