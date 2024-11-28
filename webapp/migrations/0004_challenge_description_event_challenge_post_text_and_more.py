@@ -5,35 +5,38 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('webapp', '0003_badge_board_course_event_module_challenge_post_and_more'),
+        ("webapp", "0003_badge_board_course_event_module_challenge_post_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='challenge',
-            name='description',
-            field=models.TextField(default=''),
+            model_name="challenge",
+            name="description",
+            field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='event',
-            name='challenge',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='webapp.challenge'),
+            model_name="event",
+            name="challenge",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="webapp.challenge",
+            ),
         ),
         migrations.AddField(
-            model_name='post',
-            name='text',
-            field=models.TextField(default=''),
+            model_name="post",
+            name="text",
+            field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='userchallenge',
-            name='solution',
-            field=models.TextField(default=''),
+            model_name="userchallenge",
+            name="solution",
+            field=models.TextField(default=""),
         ),
         migrations.AddField(
-            model_name='userevent',
-            name='solution',
-            field=models.TextField(default=''),
+            model_name="userevent",
+            name="solution",
+            field=models.TextField(default=""),
         ),
     ]
